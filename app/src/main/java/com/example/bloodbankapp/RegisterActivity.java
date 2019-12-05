@@ -1,7 +1,12 @@
 package com.example.bloodbankapp;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -18,67 +23,97 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements LocationListener {
     ActivityRegisterBinding binding;
+    LocationManager loc_manager;
+    user user = new user();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_register);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_register);
+        loc_manager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            String[]perm={Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(this,perm,1);
 
+            return;
+        }
+        else {
+            Toast.makeText(this, "gone", Toast.LENGTH_SHORT).show();
+            loc_manager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
+
+        }
+        loc_manager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
 
     }
+    ProgressDialog progressDialog;
 
     public void onRegisteredPressed(View view) {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Registration");
-        progressDialog.show();
-        user user = new user();
-        UserVM instance = UserVM.getInstance();
-        instance.register(user);
+        progressDialog = new ProgressDialog(this);
         String name  = binding.name.getText().toString();
         String username  = binding.email.getText().toString();
         String password  = binding.password.getText().toString();
         if (name.equals("")||
         password.equals("")||
-        username.equals("")){
+        username.equals("")||
+        user.getLat()==null||
+        user.getLng()==null){
+
             Toast.makeText(this, "Please fill all fields... ", Toast.LENGTH_SHORT).show();
-        }
-        else {
+
 
         }
+        else if (password.length()<8){
+            binding.password.setError("Password must be greater than 8 characters ");
+        }
+        else {
+            progressDialog.setTitle("Registration");
+            progressDialog.setMessage("Wait till Registration Complete");
+            progressDialog.show();
+user.setName(name);
+user.setUsername(username);
+user.setPassword(password);
+            binding.password.setError(null);
+            UserVM instance = UserVM.getInstance(this);
+            instance.register(user);
+            UserVM.registeredLiveData.observe(this, new Observer() {
+                @Override
+                public void onChanged(Object o) {
+                    progressDialog.cancel();
+                    Toast.makeText(RegisterActivity.this, "Registered Successfully...", Toast.LENGTH_SHORT).show();
+                    Intent in = new Intent(RegisterActivity.this,LoginActivity.class);
+                    startActivity(in);
+                }
+            });
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        user.setLat(location.getLatitude());
+        user.setLng(location.getLongitude());
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode==1)
-        {
-            if (resultCode==RESULT_OK)
-            {
-                System.out.println("dada");
-                Place place=PlacePicker.getPlace(data,this);
-                LatLng latLng = place.getLatLng();
-                String s = latLng.latitude +""+ latLng.longitude;
-                binding.Address.setText(s);
-            }
-        }
-    }
-    public void onLocationPressed(View view) {
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        Intent intent;
-        try {
-            intent=builder.build(this);
-            startActivityForResult(intent,1);
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-            System.out.println("first catch "+e.getMessage());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            System.out.println("second catch "+e.getMessage());
-            e.printStackTrace();
-        }
     }
 
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }

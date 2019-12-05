@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity"
+    tools:context=".LoginActivity"
     android:background="@color/colorPrimary">
 
     <ImageView
@@ -24,33 +22,21 @@
     </ImageView>
 
     <EditText
-        android:id="@+id/name"
+        android:id="@+id/login_email"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_margin="16dp"
-android:hint="    Name"
-        android:layout_marginTop="56dp"
+
         android:background="@drawable/circular_shape"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_margin="16dp"
-
         android:hint="    Email"
-        android:background="@drawable/circular_shape"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/login_password"
         android:layout_width="match_parent"
         android:hint="    Password"
         android:inputType="textPassword"
@@ -59,7 +45,8 @@ android:hint="    Name"
         android:background="@drawable/circular_shape"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+        app:layout_constraintTop_toBottomOf="@+id/login_email" />
 
 
 
@@ -67,14 +54,16 @@ android:hint="    Name"
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/circular_shape"
-        android:onClick="onRegisteredPressed"
-        android:text="Register"
+        android:onClick="onLoginPressed"
+        android:text="Login"
+
         android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/login_password" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

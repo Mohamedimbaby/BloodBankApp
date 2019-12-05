@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Backendless.initApp(this,"7ACCF0C8-58A2-FF8D-FF37-A2A5B3DC1F00","BE883DE0-6447-4A32-BBBC-926C6D5B835B");
-        Intent registerIntent = new Intent(this,RegisterActivity.class);
-        startActivity(registerIntent);
+        Intent LoginIntent = new Intent(this,LoginActivity.class);
+        startActivity(LoginIntent);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         // Passing each menu ID as a set of Ids because each
