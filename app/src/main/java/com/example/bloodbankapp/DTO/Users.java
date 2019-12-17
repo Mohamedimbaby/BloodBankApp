@@ -1,13 +1,34 @@
 package com.example.bloodbankapp.DTO;
 
-public class user {
+import java.io.Serializable;
+
+public class Users {
 String name ;
 String username ,password;
 String blood_type;
+String objectId;
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    String phone;
 Double lat ,lng;
 String user_photo_url;
 
-    public user() {
+    public Users() {
     }
 
     public String getName() {

@@ -11,17 +11,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.bloodbankapp.DTO.user;
+import com.example.bloodbankapp.DTO.Users;
 import com.example.bloodbankapp.ViewModel.UserVM;
 import com.example.bloodbankapp.databinding.ActivityRegisterBinding;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
 
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
@@ -30,7 +24,7 @@ import androidx.lifecycle.Observer;
 public class RegisterActivity extends AppCompatActivity implements LocationListener {
     ActivityRegisterBinding binding;
     LocationManager loc_manager;
-    user user = new user();
+    Users Users = new Users();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +57,8 @@ public class RegisterActivity extends AppCompatActivity implements LocationListe
         if (name.equals("")||
         password.equals("")||
         username.equals("")||
-        user.getLat()==null||
-        user.getLng()==null){
+        Users.getLat()==null||
+        Users.getLng()==null){
 
             Toast.makeText(this, "Please fill all fields... ", Toast.LENGTH_SHORT).show();
 
@@ -77,12 +71,12 @@ public class RegisterActivity extends AppCompatActivity implements LocationListe
             progressDialog.setTitle("Registration");
             progressDialog.setMessage("Wait till Registration Complete");
             progressDialog.show();
-user.setName(name);
-user.setUsername(username);
-user.setPassword(password);
+Users.setName(name);
+Users.setUsername(username);
+Users.setPassword(password);
             binding.password.setError(null);
             UserVM instance = UserVM.getInstance(this);
-            instance.register(user);
+            instance.register(Users);
             UserVM.registeredLiveData.observe(this, new Observer() {
                 @Override
                 public void onChanged(Object o) {
@@ -98,8 +92,8 @@ user.setPassword(password);
 
     @Override
     public void onLocationChanged(Location location) {
-        user.setLat(location.getLatitude());
-        user.setLng(location.getLongitude());
+        Users.setLat(location.getLatitude());
+        Users.setLng(location.getLongitude());
     }
 
     @Override
